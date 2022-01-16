@@ -19,12 +19,12 @@ async function listFiles(path, files) {
   return files
 }
 
-async function renameFiles(path, suffix, replace, enumerate) {
+async function renameFiles(path, suffix, replace, enumerate, numstart) {
   let list_files = await listFiles(path)
 
   const files = Object.values(list_files)
 
-  let num = 1
+  let num = numstart
 
   files.map(file => {
     const file_name = fileName(path, file, replace)
@@ -52,12 +52,13 @@ async function renameFiles(path, suffix, replace, enumerate) {
 }
 
 function fileName(path, file, replace) {
-  const arrPaths = file.split('\\')
+  const arrPaths = file.split(pathSep)
   const fileNameFull = arrPaths.pop()
   const arrName = fileNameFull.split('.')
   const ext = arrName.pop()
 
-  let filename = arrName[0]
+  let filename = arrName
+    .pop()
     .trim()
     .replace(path + '/', '')
     .replaceAll(/\s+/g, '_')
@@ -85,6 +86,7 @@ function getProcess(params, argv) {
     suffix: argv.replace('--suffix=', ''),
     replace: argv.replace('--replace=', ''),
     enumerate: argv.replace('--enumerate=', ''),
+    numstart: argv.replace('--numstart=', ''),
   }
 
   return process[params]
@@ -94,5 +96,6 @@ const path = getProcess('path', process.argv[2])
 const suffix = getProcess('suffix', process.argv[3])
 const replace = getProcess('replace', process.argv[4])
 const enumerate = getProcess('enumerate', process.argv[5])
+const numstart = getProcess('numstart', process.argv[6])
 
-renameFiles(path, suffix, replace, enumerate)
+renameFiles(path, suffix, replace, enumerate, numstart)
