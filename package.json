@@ -1,0 +1,12 @@
+{
+  "name": "rename_files",
+  "version": "1.0.0",
+  "description": "CLI para renomear vários arquivos de uma pasta",
+  "main": "index.js",
+  "author": "Junior Martins <amjr.box@gmail.com>",
+  "license": "MIT",
+
+  "scripts": {
+    "dev": "node index.js"
+  }
+}
