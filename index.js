@@ -14,6 +14,7 @@ async function listFiles(path, files) {
     }
 
     /*
+    Talvez, no futuro, esta feature seja necessária.
     if (stat.isDirectory()) {
       await listFiles(`${path}${pathSep}${fileList[k]}`, files)
     } else {
@@ -32,6 +33,7 @@ async function renameFiles(
   enumerate,
   numstart,
   extension,
+  test,
 ) {
   let list_files = await listFiles(path)
 
@@ -52,18 +54,18 @@ async function renameFiles(
         file_name_final = `${num2digits.padStart(2, '0')} - ${file_name_final}`
       }
 
-      console.log('file_name_final', file_name_final)
-
-      /*
-      fs.rename(`${file}`, `${path}/${file_name_final}`, function (err) {
-        if (err) {
-          console.log('ERROR: ' + err)
-          console.log(`[Err!] (${file_name_final}) ${err}`)
-        } else {
-          console.log(`[Sucesso!] ${file_name_final}`)
-        }
-      })
-      */
+      if (test === 's') {
+        console.log(`[Teste!] ${file_name_final}`)
+      } else {
+        fs.rename(`${file}`, `${path}/${file_name_final}`, function (err) {
+          if (err) {
+            console.log('ERROR: ' + err)
+            console.log(`[Err!] (${file_name_final}) ${err}`)
+          } else {
+            console.log(`[Sucesso!] ${file_name_final}`)
+          }
+        })
+      }
 
       num++
     }
@@ -80,8 +82,6 @@ function fileName(path, file, replace) {
   const ext = arrName.pop()
 
   const fileNameNoExt = fileNameFull.replace(`.${ext}`, '')
-
-  //console.log('fileNameNoExt', fileNameNoExt)
 
   let filename = fileNameNoExt
     .trim()
@@ -113,6 +113,7 @@ function getProcess(params, argv) {
     enumerate: argv.replace('--enumerate=', ''),
     numstart: argv.replace('--numstart=', ''),
     extension: argv.replace('--extension=', ''),
+    test: argv.replace('--test=', ''),
   }
 
   return process[params]
@@ -124,5 +125,6 @@ const replace = getProcess('replace', process.argv[4])
 const enumerate = getProcess('enumerate', process.argv[5])
 const numstart = getProcess('numstart', process.argv[6])
 const extension = getProcess('extension', process.argv[7])
+const test = getProcess('test', process.argv[8])
 
-renameFiles(path, suffix, replace, enumerate, numstart, extension)
+renameFiles(path, suffix, replace, enumerate, numstart, extension, test)
