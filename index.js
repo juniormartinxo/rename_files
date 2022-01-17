@@ -9,11 +9,17 @@ async function listFiles(path, files) {
   for (let k in fileList) {
     let stat = await fs.stat(`${path}${pathSep}${fileList[k]}`)
 
+    if (stat.isFile()) {
+      files.push(`${path}${pathSep}${fileList[k]}`)
+    }
+
+    /*
     if (stat.isDirectory()) {
       await listFiles(`${path}${pathSep}${fileList[k]}`, files)
     } else {
       files.push(`${path}${pathSep}${fileList[k]}`)
     }
+    */
   }
 
   return files
@@ -46,6 +52,9 @@ async function renameFiles(
         file_name_final = `${num2digits.padStart(2, '0')} - ${file_name_final}`
       }
 
+      console.log('file_name_final', file_name_final)
+
+      /*
       fs.rename(`${file}`, `${path}/${file_name_final}`, function (err) {
         if (err) {
           console.log('ERROR: ' + err)
@@ -54,6 +63,7 @@ async function renameFiles(
           console.log(`[Sucesso!] ${file_name_final}`)
         }
       })
+      */
 
       num++
     }
@@ -65,14 +75,18 @@ async function renameFiles(
 function fileName(path, file, replace) {
   const arrPaths = file.split(pathSep)
   const fileNameFull = arrPaths.pop()
+
   const arrName = fileNameFull.split('.')
   const ext = arrName.pop()
 
-  let filename = arrName
-    .pop()
+  const fileNameNoExt = fileNameFull.replace(`.${ext}`, '')
+
+  //console.log('fileNameNoExt', fileNameNoExt)
+
+  let filename = fileNameNoExt
     .trim()
     .replace(path + '/', '')
-    .replaceAll(/\s+/g, '_')
+    .replaceAll(/\s+|\./g, '_')
     .normalize('NFD')
     .replace(/[\u0300-\u036f]/g, '')
     .replaceAll(/[^0-9a-zA-Z.]+/g, '_')
