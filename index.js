@@ -19,7 +19,14 @@ async function listFiles(path, files) {
   return files
 }
 
-async function renameFiles(path, suffix, replace, enumerate, numstart) {
+async function renameFiles(
+  path,
+  suffix,
+  replace,
+  enumerate,
+  numstart,
+  extension,
+) {
   let list_files = await listFiles(path)
 
   const files = Object.values(list_files)
@@ -27,25 +34,29 @@ async function renameFiles(path, suffix, replace, enumerate, numstart) {
   let num = numstart
 
   files.map(file => {
-    const file_name = fileName(path, file, replace)
-    const num2digits = num.toString()
+    let extFile = ext(file)
 
-    let file_name_final = `${suffix ?? ''}${file_name}`
+    if (extension === 'all' || extFile === extension) {
+      const file_name = fileName(path, file, replace)
+      const num2digits = num.toString()
 
-    if (enumerate === 's') {
-      file_name_final = `${num2digits.padStart(2, '0')} - ${file_name_final}`
-    }
+      let file_name_final = `${suffix ?? ''}${file_name}`
 
-    fs.rename(`${file}`, `${path}/${file_name_final}`, function (err) {
-      if (err) {
-        console.log('ERROR: ' + err)
-        console.log(`[Err!] (${file_name_final}) ${err}`)
-      } else {
-        console.log(`[Sucesso!] ${file_name_final}`)
+      if (enumerate === 's') {
+        file_name_final = `${num2digits.padStart(2, '0')} - ${file_name_final}`
       }
-    })
 
-    num++
+      fs.rename(`${file}`, `${path}/${file_name_final}`, function (err) {
+        if (err) {
+          console.log('ERROR: ' + err)
+          console.log(`[Err!] (${file_name_final}) ${err}`)
+        } else {
+          console.log(`[Sucesso!] ${file_name_final}`)
+        }
+      })
+
+      num++
+    }
   })
 
   return files
@@ -87,6 +98,7 @@ function getProcess(params, argv) {
     replace: argv.replace('--replace=', ''),
     enumerate: argv.replace('--enumerate=', ''),
     numstart: argv.replace('--numstart=', ''),
+    extension: argv.replace('--extension=', ''),
   }
 
   return process[params]
@@ -97,5 +109,6 @@ const suffix = getProcess('suffix', process.argv[3])
 const replace = getProcess('replace', process.argv[4])
 const enumerate = getProcess('enumerate', process.argv[5])
 const numstart = getProcess('numstart', process.argv[6])
+const extension = getProcess('extension', process.argv[7])
 
-renameFiles(path, suffix, replace, enumerate, numstart)
+renameFiles(path, suffix, replace, enumerate, numstart, extension)
