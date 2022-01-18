@@ -35,7 +35,7 @@ async function renameFiles(
   extension,
   test,
 ) {
-  let list_files = await listFiles(path)
+  const list_files = await listFiles(path)
 
   const files = Object.values(list_files)
 
@@ -59,7 +59,6 @@ async function renameFiles(
       } else {
         fs.rename(`${file}`, `${path}/${file_name_final}`, function (err) {
           if (err) {
-            console.log('ERROR: ' + err)
             console.log(`[Err!] (${file_name_final}) ${err}`)
           } else {
             console.log(`[Sucesso!] ${file_name_final}`)
@@ -102,7 +101,7 @@ function fileName(path, file, replace) {
 }
 
 function ext(file) {
-  return file.split('.').pop()
+  return file.split('.').pop().toLowerCase()
 }
 
 function getProcess(params, argv) {
