@@ -80,9 +80,12 @@ function fileName(path, file, replace) {
   const arrName = fileNameFull.split('.')
   const ext = arrName.pop()
 
-  const fileNameNoExt = fileNameFull.replace(`.${ext}`, '')
+  const regexReplace = new RegExp(replace, 'g')
 
-  let filename = fileNameNoExt
+  let filename = fileNameFull
+    .replace(`.${ext}`, '')
+    .replaceAll(regexReplace, '')
+    .replaceAll(/_{2,}/g, '_')
     .trim()
     .replace(path + '/', '')
     .replaceAll(/\s+|\./g, '_')
@@ -91,11 +94,6 @@ function fileName(path, file, replace) {
     .replaceAll(/[^0-9a-zA-Z.]+/g, '_')
     .replaceAll(/_{2,}/g, '_')
     .toLowerCase()
-
-  if (replace !== undefined) {
-    const regexReplace = new RegExp(replace, 'g')
-    filename = filename.replaceAll(regexReplace, '').replaceAll(/_{2,}/g, '_')
-  }
 
   return `${filename}.${ext}`.replaceAll('_.', '.')
 }
