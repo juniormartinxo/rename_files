@@ -4,7 +4,7 @@ Um renomeador de arquivos utilizando Node e Powershell
 
 ## Instalação
 
-- Aponte o path do Windows para o arquivo `rename_filer.ps1`
+- Aponte o path do Windows para o arquivo `rename_files.ps1`
 - Clone este projeto em qualquer lugar do seu computador
 
 ## Como utilizar
